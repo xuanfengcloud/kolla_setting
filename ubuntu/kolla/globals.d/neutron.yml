@@ -1,0 +1,5 @@
+---
+kolla_internal_vip_address: "10.0.0.250" # 找一个没有占用的ip
+# docker_registry: "10.0.0.203:5000" #指定私有registry  
+network_interface: "enp1s0"  # 内部openstack管理网段
+neutron_external_interface: "enp6s0"
