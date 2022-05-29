@@ -1,0 +1,60 @@
+# 每台节点的信息，一行写一台，格式为： 别名 ansible_host=<内部网络ip> ansible_user=root ansible_password=<root> ansible_python_interpreter=<python3命令的绝对路径>
+# 您可以自行添加其他行为参数，想了解ansible inventory知识可以查阅官方文档：https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#intro-inventory
+control01 ansible_host=10.0.0.11 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+control02 ansible_host=10.0.0.12 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+control03 ansible_host=10.0.0.13 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+network01 ansible_host=10.0.0.21 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+network02 ansible_host=10.0.0.22 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+monitoring01 ansible_host=10.0.0.31 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+monitoring02 ansible_host=10.0.0.32 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+compute01 ansible_host=10.0.0.101 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+compute02 ansible_host=10.0.0.102 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+storage01 ansible_host=10.0.0.21 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+storage02 ansible_host=10.0.0.22 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+#gpu01 ansible_host=10.0.0.201 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+#gpu02 ansible_host=10.0.0.202 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+#special01 ansible_host=10.0.0.211 ansible_user=root ansible_password=123456 ansible_python_interpreter=/usr/bin/python3
+
+
+# 接下来，将上方的各个节点进行分组
+[control] # openstack 控制节点，主要运行keystone、neutron ml3、mariaDB、etcd、rabbitMQ、fluentd、haproxy、keepalived等组件。
+control01
+control02
+control03
+
+[compute] # openstack 计算节点，负责跑云服务器。主要运行nova、neutron等组件。
+compute01
+compute02
+
+[storage] # openstack 存储节点，保存快照、镜像、文件。主要运行cinder、glance、swift组件。
+storage01
+storage02
+
+[monitoring]  # openstack 面板和监控节点 ， 主要运行horizon、skyline等面板组件以及prometheus、Grafana、Kibana等监控组件。
+monitoring01
+monitoring02
+
+[network] # openstack 网络节点。主要运行l3-agent、loadbalancers组件。计算节点上的网络组件不包含l3-agent。
+network01
+network02
+
+[deployment]  # 连接locahost用于部署openstack。这个不用修改。
+localhost ansible_connection=local become=true
+
+[baremetal:children] # 裸金属服务器
+control
+network
+compute
+storage
+monitoring
+
+[tls-backend:children]
+control
+
+#[gpu] # 边缘计算和人脸识别、图像识别的节点，服务器上安插了显卡
+#gpu01
+#gpu02
+
+#[special] # 特殊硬件节点
+#special01
+

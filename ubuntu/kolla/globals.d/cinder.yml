@@ -1,0 +1,3 @@
+---
+enable_cinder: "yes"  # 这一个是启动cinder块存储并使用我们的VG
+enable_cinder_backend_lvm: "yes" 

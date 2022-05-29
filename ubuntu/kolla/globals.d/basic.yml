@@ -1,0 +1,4 @@
+---  
+kolla_base_distro: "ubuntu"
+kolla_install_type: "source" #使⽤基于源代码的image  
+openstack_release: "yoga" #该配置项最好与kolla-ansible分⽀版本保持⼀致

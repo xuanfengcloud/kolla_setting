@@ -1,0 +1,2 @@
+---
+nova_compute_virt_type: "qemu"
